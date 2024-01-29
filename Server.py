@@ -11,10 +11,10 @@ logging.basicConfig()
 USERS = {}
 VALUE = 0
 
-def users_event():
+def usersEvent():
     return json.dumps({"type": "users", "count": len(USERS)})
 
-def value_event():
+def valueEvent():
     return json.dumps({"type": "value", "value": VALUE})
 
 async def clientConnection(websocket):
@@ -23,16 +23,16 @@ async def clientConnection(websocket):
     try:
         # Register user
         USERS[id] = websocket
-        websockets.broadcast(USERS.values(), users_event())
+        websockets.broadcast(USERS.values(), usersEvent())
         print("Client connected->  " + str(id) + "Number of active clients -> " + str(len(USERS)))
         # Send current state to user
-        await websocket.send(value_event())
+        await websocket.send(valueEvent())
         await getMessage(websocket, id)
 
     finally:
         # Unregister user
         USERS.pop(id)
-        websockets.broadcast(USERS.values(), users_event())
+        websockets.broadcast(USERS.values(), usersEvent())
 
 async def getMessage(websocket, id):
     global VALUE
